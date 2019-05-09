@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>gojs</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="js/go-debug.js"></script>
+</head>
+<style>
+    body, html {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<body>
+<div id="myDiagramDiv"
+     style="width:500px; height:500px; background-color: #DAE4E4;"></div>
+</body>
+<script>
+    // 创建GO对象模型
+    var GO = go.GraphObject.make;
+    // 将对象模型挂载dom
+    var myDiagram = GO(go.Diagram, 'myDiagramDiv',
+        {
+            'undoManager.isEnabled': true  //启用Ctrl-Z撤消，Ctrl-Y重做
+        });
+    var myModel = GO(go.Model); // 挂载数据模型
+
+    myModel.nodeDataArray = [
+        {key: '1'},
+        {key: '2'},
+        {key: '3'},
+    ];
+    myDiagram.model = myModel;   // 数据模型渲染
+
+</script>
+</html>

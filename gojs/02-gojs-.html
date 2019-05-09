@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>gojs</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="js/go-debug.js"></script>
+</head>
+<style>
+    body, html {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<body>
+<div id="myDiagramDiv"
+     style="width:500px; height:500px; background-color: #DAE4E4;"></div>
+</body>
+<script>
+    var $ = go.GraphObject.make;
+    var myDiagram =
+        $(go.Diagram, "myDiagramDiv",
+            {
+                "undoManager.isEnabled": true // enable Ctrl-Z to undo and Ctrl-Y to redo
+            });
+
+    var myModel = $(go.Model);
+    // in the model data, each node is represented by a JavaScript object:
+    myModel.nodeDataArray = [
+        {key: "Alpha", name: '1111'},
+        {key: "Beta", name: '2222'},
+        {key: "Gamma", name: '3333'}
+    ];
+    myDiagram.nodeTemplate =
+        $(go.Node,
+            $(go.TextBlock,
+                new go.Binding("text", "name") // TextBlock的text属性和模型数据的key属性之间存在数据绑定
+            )
+        );
+
+    myDiagram.model = myModel;
+</script>
+</html>

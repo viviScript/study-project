@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>gojs</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="js/go-debug.js"></script>
+</head>
+<style>
+    body, html {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<body>
+<div id="myDiagramDiv"
+     style="width:500px; height:500px; background-color: #DAE4E4;"></div>
+</body>
+<script>
+    // 创建go对象模型
+    var GO = go.GraphObject.make;
+    // 挂载对象模型dom
+
+    var myDiagram = GO(go.Diagram, 'myDiagramDiv',
+        {
+            "undoManager.isEnabled": true,
+            // 树节点配置
+            layout: GO(go.TreeLayout, {
+                angle: 90, layerSpacing: 35
+            })
+        }
+    )
+    // 模版连接线配置
+    myDiagram.linkTemplate = GO(go.Link,
+        {routing: go.Link.Orthogonal, corner: 5 },
+        GO(go.Shape, {strokeWidth: 3, stroke: "#555"}),
+        GO(go.TextBlock, '线文字', {}, new go.Binding('text', 'name'))
+    )
+    // 创建数据模型
+    var myModel = GO(go.TreeModel);
+    // 创建数据集合
+    myModel.nodeDataArray = [
+        { key: "1",              name: "Don Meow",   source: "cat1.png" },
+        { key: "2", parent: "1", name: "Demeter",    source: "cat2.png" },
+        { key: "3", parent: "1", name: "Copricat",   source: "cat3.png" },
+        { key: "4", parent: "3", name: "Jellylorum", source: "cat4.png" },
+        { key: "5", parent: "3", name: "Alonzo",     source: "cat5.png" },
+        { key: "6", parent: "2", name: "Munkustrap", source: "cat6.png" }
+    ]
+    // 配置对象模型节点模版
+    myDiagram.nodeTemplate = GO(go.Node, 'Horizontal',
+        // 节点属性配置
+        { background: '#44ccff' },
+        // 几何图形配置
+        GO(go.Shape, 'RoundedRectangle',
+            // 几何图形属性
+            {},
+            // 图形绑定
+            new go.Binding('figure', 'fig')
+        ),
+        // 图片配置
+        GO(go.Picture,
+            // 图片属性配置
+            {margin: 10, width: 50, height: 50, background: "red" },
+            // 图片绑定
+            new go.Binding('source')
+        ),
+        GO(go.TextBlock, '默认文字',
+            // 文字属性配置
+            {},
+            // 文字绑定
+            new go.Binding('text', 'name')
+        )
+    )
+    // 数据渲染
+    myDiagram.model = myModel;
+</script>
+</html>

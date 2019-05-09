@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>gojs</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="js/go-debug.js"></script>
+</head>
+<style>
+    body, html {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<body>
+<div id="myDiagramDiv"
+     style="width:500px; height:500px; background-color: #DAE4E4;"></div>
+</body>
+<script>
+    var $ = go.GraphObject.make;
+    var myDiagram =
+        $(go.Diagram, "myDiagramDiv",
+            {
+                "undoManager.isEnabled": true // enable Ctrl-Z to undo and Ctrl-Y to redo
+            });
+
+    var myModel = $(go.Model);
+    // in the model data, each node is represented by a JavaScript object:
+    // 数据项
+    myModel.nodeDataArray = [
+        {key: "Alpha", name: '1111', source: "./image/cat1.png"},
+        {key: "Beta", name: '2222', source: "./image/cat1.png"},
+        {key: "Gamma", name: '3333', source: "./image/cat1.png"}
+    ];
+    myDiagram.nodeTemplate =
+        $(go.Node, 'Horizontal',  // 几何体位置方向
+            { background: "#44CCFF" },
+            new go.Binding("location", "loc"),
+            $(go.Picture,
+                // Pictures should normally have an explicit width and height.
+                // This picture has a red background, only visible when there is no source set
+                // or when the image is partially transparent.
+                { margin: 10, width: 50, height: 50, background: "red" },
+                // Picture.source is data bound to the "source" attribute of the model data
+                new go.Binding("source")),
+            $(go.TextBlock,
+                "默认文本",  // the initial value for TextBlock.text
+                // some room around the text, a larger font, and a white stroke:
+                { margin: 12, stroke: "white", font: "bold 16px sans-serif" },
+                // TextBlock.text is data bound to the "name" attribute of the model data
+                new go.Binding("text", "name"))
+            );
+
+    myDiagram.model = myModel;
+</script>
+</html>
