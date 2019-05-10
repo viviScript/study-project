@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>gojs</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="js/go-debug.js"></script>
+</head>
+<style>
+    body, html {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<body>
+<div id="myDiagramDiv"
+     style="width:500px; height:500px; background-color: #DAE4E4;"></div>
+<button onclick="btnCLick()">选中点击变红</button>
+</body>
+<script>
+    var $ = go.GraphObject.make;
+    var diagram = $(go.Diagram, 'myDiagramDiv');
+    var violetbrush = $(go.Brush, "Linear", {0.0: "Violet", 1.0: "Lavender"});
+
+    diagram.add(
+        $(go.Node, "Auto",
+            $(go.Shape, "RoundedRectangle",
+                {fill: violetbrush}),
+            $(go.TextBlock, "Hello!",
+                {margin: 5})
+        ));
+
+    diagram.add(
+        $(go.Node, "Vertical",
+            $(go.Shape, "Ellipse",
+                {fill: violetbrush}),
+            $(go.TextBlock, "Goodbye!",
+                {margin: 5}),
+            $(go.TextBlock, "111!",
+                {margin: 5}),
+            $(go.TextBlock, "222!",
+                {margin: 5}),
+            $(go.TextBlock, "333!",
+                {margin: 5})
+        ));
+    diagram.add(
+        $(go.Part, "Vertical",
+            $(go.TextBlock, { text: "a Text Block", background: "lightgreen", margin: 2,editable: true }),
+            $(go.TextBlock, { text: "a Text Block", background: "lightgreen", margin: 2,
+                width: 100, height: 33, textAlign: 'center' }),
+            $(go.TextBlock, { text: "a Text Block", background: "lightgreen", margin: 2,
+                width: 60, height: 33 }),
+            $(go.TextBlock, { text: "a Text Block", background: "lightgreen", margin: 2,
+                width: 50, height: 22 }),
+            $(go.TextBlock, { text: "a Text Block", background: "lightgreen", margin: 2,
+                width: 40, height: 9 })
+        ));
+</script>
+</html>

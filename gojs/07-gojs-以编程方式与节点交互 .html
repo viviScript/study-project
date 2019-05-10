@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>gojs</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="js/go-debug.js"></script>
+</head>
+<style>
+    body, html {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<body>
+<div id="myDiagramDiv"
+     style="width:500px; height:500px; background-color: #DAE4E4;"></div>
+<button onclick="btnCLick()">选中点击变红</button>
+</body>
+<script>
+    var GO = go.GraphObject.make;
+
+    var myDiagram = GO(go.Diagram, 'myDiagramDiv',
+        {
+
+        }
+    )
+    myDiagram.nodeTemplate = GO(go.Node, 'Auto',
+        {},
+        GO(go.Shape, 'Rectangle',
+            {name: 'SHAPE', stroke: null},
+            new go.Binding('fill', 'color')
+        ),
+        GO(go.TextBlock, '默认文字',
+            {
+                margin: 10
+            },
+            new go.Binding('text', 'key')
+        )
+    )
+    var myModel = GO(go.Model);
+
+    myModel.nodeDataArray = [
+        { key: "Alpha", color: "lightblue" },
+        { key: "Beta", color: "orange" },
+        { key: "Gamma", color: "lightgreen" },
+        { key: "Delta", color: "pink" }
+    ]
+
+    myDiagram.model = myModel;
+    var node = myDiagram.findNodeForKey("Alpha");
+    var node2 = myDiagram.findNodeForKey("Beta");
+    myDiagram.select(node);
+    console.log(node.data);
+    // myDiagram.commit(function(d) {  // this Diagram
+    //     console.log(d, d.nodes)
+    //     // iterate over all nodes in Diagram
+    //     d.nodes.each(function(node) {
+    //         console.log(node)
+    //         if (node.data.key === "Beta") {
+    //             return false
+    //         } //skip Beta, just to contrast
+    //         node.scale = 0.4; // shrink each node
+    //     });
+    //
+    // }, "decrease scale");
+    myDiagram.commit(function (d) {
+        d.nodes.each(function (node) {
+            if (node.data.key === 'Beta') {
+                return false
+            } else {
+                node.scale = 0.4
+            }
+        })
+    }, "更改大小")
+    function btnCLick () {
+        // myDiagram.commit(function (d) {
+        //     d.selection.each(function (node) {
+        //         var shape = node.findObject('SHAPE')
+        //         if (shape !== null) {
+        //             shape.fill = 'red'
+        //         }
+        //     })
+        // }, '更改颜色')
+        
+    }
+    myDiagram.model.commit(function (m) {
+        m.set(node.data, 'color', 'red')
+        m.set(node2.data, 'color', 'red')
+    }, '改变颜色')
+
+</script>
+</html>

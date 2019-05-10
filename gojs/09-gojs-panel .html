@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>gojs</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="js/go-debug.js"></script>
+</head>
+<style>
+    body, html {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<body>
+<div id="myDiagramDiv"
+     style="width:500px; height:500px; background-color: #DAE4E4;"></div>
+<button onclick="btnCLick()">选中点击变红</button>
+</body>
+<script>
+   var $ = go.GraphObject.make;
+   var diagram = $(go.Diagram, 'myDiagramDiv');
+   function makeIndicator(propName) {  // the data property name
+       return $(go.Shape,
+           "Circle",
+           { width: 8, height: 8, fill: "white", strokeWidth: 0, margin: 5 },
+           new go.Binding("fill", propName));
+   }
+   diagram.nodeTemplate = $(go.Node, 'Vertical',
+       $(go.Panel, 'Auto',
+           {background: 'white'},
+           {portId: ''},
+           $(go.Shape,
+               {fill: 'transparent', stroke: 'lightgray'}
+           ),
+           $(go.Panel, 'Vertical',
+                $(go.Panel, 'Horizontal',
+                    makeIndicator("ind0"),
+                    makeIndicator("ind1"),
+                    makeIndicator("ind2")
+                ),
+               $(go.Picture,
+                   {width: 32, height: 32, margin: 4, background: 'red'}
+               ),
+               $(go.TextBlock,
+                   {stretch: go.GraphObject.Horizontal, textAlign: 'center'},
+                   new go.Binding('text', 'number'),
+                   new go.Binding('background', 'color')
+               )
+           )
+       ),
+       $(go.TextBlock,
+           {margin: 4},
+           new go.Binding('text')
+       )
+   )
+   diagram.model.nodeDataArray = [
+       { key: 1, text: "Device Type A", number: 17, icon: "server switch.jpg", color: "moccasin",
+           ind0: "red", ind1: "orange", ind2: "mediumspringgreen" },
+       { key: 2, text: "Device Type B", number: 97, icon: "voice atm switch.jpg", color: "mistyrose",
+           ind0: "lightgray", ind1: "orange", ind2: "green" }
+   ];
+   diagram.model.linkDataArray = [
+       { from: 1, to: 2 }
+   ];
+</script>
+</html>
