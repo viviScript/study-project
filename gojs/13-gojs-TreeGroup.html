@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>gojs</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="js/go-debug.js"></script>
+</head>
+<style>
+    body, html {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<body>
+<div id="myDiagramDiv"
+     style="width:500px; height:500px; background-color: #DAE4E4;"></div>
+</body>
+<script>
+    var $ = go.GraphObject.make;
+
+    var myDiagram = $(go.Diagram, 'myDiagramDiv',
+        {
+            layout: $(go.LayeredDigraphLayout,
+                { direction: 90, layerSpacing: 10, isRealtime: false })
+        }
+    )
+    myDiagram.nodeTemplate = $(go.Node, 'Vertical',
+        { background: "#44CCFF"},  // 节点属性
+        $(go.Panel, 'Horizontal',
+            $(go.TextBlock,'默认文字',
+                {margin: 5, stroke: "white"},
+                new go.Binding('text', 'text')
+            ),
+            $(go.TextBlock,'默认文字',
+                {margin: 5, stroke: "white"},
+                new go.Binding('text', 'type')
+            ),
+            // $("TreeExpanderButton")
+        ),
+        // $(go.Panel, 'Horizontal',
+        //     new go.Binding("itemArray", "children"),
+        //     {
+        //         itemTemplate:
+        //             $(go.Panel, 'Vertical',
+        //                 {margin: 2},
+        //                 $(go.Shape, "RoundedRectangle",
+        //                     { width: 50, height: 50, fill: "#91E3E0" }),
+        //                 $(go.TextBlock, new go.Binding("text", "text"),
+        //                     {row: 0, column: 0, margin: 2 }),
+        //                 $(go.TextBlock, new go.Binding("text", "type"),
+        //                     {row: 0 ,column: 1,margin: 5 }),
+        //             ),
+        //     },
+        // ),
+    );
+    myDiagram.groupTemplate =
+        $(go.Group, "Auto",
+            { // define the group's internal layout
+                layout: $(go.TreeLayout,
+                    { angle: 90, arrangement: go.TreeLayout.ArrangementHorizontal, isRealtime: false }),
+                // the group begins unexpanded;
+                // upon expansion, a Diagram Listener will generate contents for the group
+                isSubGraphExpanded: false,
+                // when a group is expanded, if it contains no parts, generate a subGraph inside of it
+            },
+            $(go.Shape, "Rectangle",
+                { fill: null, stroke: "gray", strokeWidth: 2 }),
+            $(go.Panel, "Vertical",
+                { defaultAlignment: go.Spot.Left, margin: 4 },
+                $(go.Panel, "Horizontal",
+                    { defaultAlignment: go.Spot.Top },
+                    // the SubGraphExpanderButton is a panel that functions as a button to expand or collapse the subGraph
+                    $("SubGraphExpanderButton"),
+                    $(go.TextBlock,
+                        { font: "Bold 18px Sans-Serif", margin: 4 },
+                        new go.Binding("text", "text")),
+                    $("TreeExpanderButton"),
+                ),
+                // create a placeholder to represent the area where the contents of the group are
+                $(go.Placeholder,
+                    { padding: new go.Margin(0, 10) })
+            )  // end Vertical Panel
+        );  // end Group
+
+    myDiagram.linkTemplate = $(go.Link,
+        $(go.Shape)
+    )
+    // var myModel = $(go.TreeModel);
+
+    var nodeDataArray = [
+        {key: '1', text: '市局',isGroup: true},
+        {key: '2', text: '芙蓉分局', parent: '1',isGroup: true},
+        {key: '3', text: '开福分局', parent: '1',isGroup: true},
+        {key: '4', text: '岳麓分局', parent: '1',isGroup: true},
+        {key: '5', text: '雨花分局', parent: '1',isGroup: true},
+        {key: '6', text: '天心分局', parent: '1',isGroup: true},
+        {key: '7', text: '望城分局', parent: '1',isGroup: true},
+        {key: '8', text: '朝阳街派出所', parent: '2',isGroup: true},
+        {key: '9', text: '火车站派出所', parent: '2',isGroup: true},
+        {key: '10', text: '五一派出所', parent: '2',isGroup: true},
+        {key: 'a', text: '坐席一', type: '上线', group: '1'},
+        {key: 'b', text: '坐席二', type: '离线', group: '1'},
+        {key: 'c', text: '坐席三', type: '空闲', group: '1'},
+        {key: 'd', text: '坐席四', type: '通话', group: '1'},
+        {key: 'e', text: '坐席五', type: '示闲', group: '1'},
+        {key: 'f', text: '坐席六', type: '挂机', group: '1'},
+        {key: 'g', text: '坐席七', type: '上线', group: '1'},
+        {key: 'h', text: '坐席八', type: '离线', group: '1'},
+        {key: 'j', text: '坐席九', type: '空闲', group: '1'},
+        {key: 'k', text: '坐席十', type: '通话', group: '1'},
+        {key: 'l', text: '坐席十一', type: '示闲', group: '1'},
+        {key: 'o', text: '坐席十二', type: '挂机', group: '1'},
+    ];
+    var linkDataArray = [
+        { from: "1", to: "2" }, // from a Node to the Group
+        { from: "1", to: "3" },  // this link is a member of the Group
+        { from: "1", to: "4" },  // this link is a member of the Group
+        { from: "1", to: "5" },  // this link is a member of the Group
+        { from: "1", to: "6" },  // this link is a member of the Group
+        { from: "2", to: "7" },  // this link is a member of the Group
+        { from: "2", to: "8" },  // this link is a member of the Group
+        { from: "3", to: "9" },  // this link is a member of the Group
+        { from: "3", to: "10" }  // from the Group to a Node
+    ]
+    myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray)
+</script>
+</html>

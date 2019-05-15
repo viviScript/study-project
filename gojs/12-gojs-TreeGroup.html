@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>gojs</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="js/go-debug.js"></script>
+</head>
+<style>
+    body, html {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<body>
+<div id="myDiagramDiv"
+     style="width:500px; height:500px; background-color: #DAE4E4;"></div>
+</body>
+<script>
+    var $ = go.GraphObject.make;
+
+    var myDiagram = $(go.Diagram, 'myDiagramDiv',
+        {
+            layout: $(go.TreeLayout, { angle: 90, nodeSpacing: 10, layerSpacing: 30 })
+        }
+    )
+    myDiagram.nodeTemplate = $(go.Node, 'Vertical',
+        { background: "#44CCFF"},  // 节点属性
+        $(go.Panel, 'Horizontal',
+            $(go.TextBlock,'默认文字',
+                {margin: 5, stroke: "white"},
+                new go.Binding('text', 'text')
+            ),
+            $("TreeExpanderButton")
+        ),
+        $(go.Panel, 'Table',
+            // $(go.Shape, 'RoundedRectangle'),
+            new go.Binding("itemArray", "children"),
+            {
+                itemTemplate:
+                    $(go.Panel, 'TableRow',
+                        {margin: 2},
+                        $(go.Shape, "RoundedRectangle",
+                            { width: 50, height: 50, fill: "#91E3E0" }),
+                        $(go.TextBlock, new go.Binding("text", "text"),
+                            {row: 0, column: 0, margin: 2 }),
+                        $(go.TextBlock, new go.Binding("text", "type"),
+                            {row: 0 ,column: 1,margin: 5 })
+                    )
+            }
+        ),
+    );
+    myDiagram.linkTemplate = $(go.Link,
+        $(go.Shape)
+    )
+    var myModel = $(go.TreeModel);
+
+    myModel.nodeDataArray = [
+        {
+            key: '1', text: '市局',
+            children: [
+                {key: 'a', text: '坐席一', type: '上线'},
+                {key: 'b', text: '坐席二', type: '离线'},
+                {key: 'c', text: '坐席三', type: '空闲'},
+                {key: 'd', text: '坐席四', type: '通话'},
+                {key: 'e', text: '坐席五', type: '示闲'},
+                {key: 'f', text: '坐席六', type: '挂机'},
+            ]
+        },
+        {key: '2', text: '芙蓉分局', parent: '1'},
+        {key: '3', text: '开福分局', parent: '1'},
+        {key: '4', text: '岳麓分局', parent: '1'},
+        {key: '5', text: '雨花分局', parent: '1'},
+        {key: '6', text: '天心分局', parent: '1'},
+        {key: '7', text: '望城分局', parent: '1'},
+        {key: '8', text: '朝阳街派出所', parent: '2'},
+        {key: '9', text: '火车站派出所', parent: '2'},
+        {key: '10', text: '五一派出所', parent: '2'},
+    ];
+    myDiagram.model = myModel;
+</script>
+</html>
