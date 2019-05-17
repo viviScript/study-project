@@ -19,20 +19,39 @@
 </style>
 <body>
 <div id="myDiagramDiv"
-     style="width:500px; height:500px; background-color: #DAE4E4;"></div>
+     style="width:1000px; height:1000px; background-color: #DAE4E4;"></div>
 </body>
 <script>
     var $ = go.GraphObject.make;
 
     var myDiagram = $(go.Diagram, 'myDiagramDiv',
         {
+            "grid.visible": true,
+            "grid.gridCellSize": new go.Size(30, 20),
+            "draggingTool.isGridSnapEnabled": true,
+            "resizingTool.isGridSnapEnabled": true,
+            "rotatingTool.snapAngleMultiple": 90,
+            "rotatingTool.snapAngleEpsilon": 45,
+            "undoManager.isEnabled": true,
+            // layout: $(go.CircularLayout),
             layout: $(go.LayeredDigraphLayout,
-                { direction: 90, layerSpacing: 10, isRealtime: false })
+                { direction: 0, layerSpacing: 10, isRealtime: false })
         }
     )
+    // myDiagram.layout.wrappingColumn = 1;
     myDiagram.nodeTemplate = $(go.Node, 'Vertical',
-        { background: "#44CCFF"},  // 节点属性
-        $(go.Panel, 'Horizontal',
+        {
+            background: "#44CCFF",
+            click: function (e, obj) {
+                console.log(e, obj, '点击节点')
+                var node = obj.part;
+                var data = node.data;
+                node.diagram.model.commit(function(m) {
+                    m.set(data, "text", data.text + 1);
+                }, "clicked");
+            }
+        },  // 节点属性
+       $(go.Panel, 'Vertical',
             $(go.TextBlock,'默认文字',
                 {margin: 5, stroke: "white"},
                 new go.Binding('text', 'text')
@@ -62,8 +81,14 @@
     myDiagram.groupTemplate =
         $(go.Group, "Auto",
             { // define the group's internal layout
-                layout: $(go.TreeLayout,
-                    { angle: 90, arrangement: go.TreeLayout.ArrangementHorizontal, isRealtime: false }),
+                // layout: $(go.TreeLayout,
+                //     { angle: 90, arrangement: go.TreeLayout.ArrangementHorizontal, isRealtime: false }),
+                layout: $(go.GridLayout,
+                    {
+                        comparer: go.GridLayout.smartComparer,
+                        wrappingColumn: 5
+                    }
+                ),
                 // the group begins unexpanded;
                 // upon expansion, a Diagram Listener will generate contents for the group
                 isSubGraphExpanded: false,
@@ -104,18 +129,32 @@
         {key: '8', text: '朝阳街派出所', parent: '2',isGroup: true},
         {key: '9', text: '火车站派出所', parent: '2',isGroup: true},
         {key: '10', text: '五一派出所', parent: '2',isGroup: true},
-        {key: 'a', text: '坐席一', type: '上线', group: '1'},
-        {key: 'b', text: '坐席二', type: '离线', group: '1'},
-        {key: 'c', text: '坐席三', type: '空闲', group: '1'},
-        {key: 'd', text: '坐席四', type: '通话', group: '1'},
-        {key: 'e', text: '坐席五', type: '示闲', group: '1'},
-        {key: 'f', text: '坐席六', type: '挂机', group: '1'},
-        {key: 'g', text: '坐席七', type: '上线', group: '1'},
-        {key: 'h', text: '坐席八', type: '离线', group: '1'},
-        {key: 'j', text: '坐席九', type: '空闲', group: '1'},
-        {key: 'k', text: '坐席十', type: '通话', group: '1'},
-        {key: 'l', text: '坐席十一', type: '示闲', group: '1'},
-        {key: 'o', text: '坐席十二', type: '挂机', group: '1'},
+        {key: '接警', text: '接警坐席', group: '1',isGroup: true},
+        {key: '处警', text: '处警坐席', group: '1',isGroup: true},
+        {key: 'a', text: '坐席一', type: '上线', group: '接警'},
+        {key: 'b', text: '坐席二', type: '离线', group: '接警'},
+        {key: 'c', text: '坐席三', type: '空闲', group: '接警'},
+        {key: 'd', text: '坐席四', type: '通话', group: '接警'},
+        {key: 'e', text: '坐席五', type: '示闲', group: '接警'},
+        {key: 'f', text: '坐席六', type: '挂机', group: '接警'},
+        {key: 'g', text: '坐席七', type: '上线', group: '接警'},
+        {key: 'h', text: '坐席八', type: '离线', group: '接警'},
+        {key: 'j', text: '坐席九', type: '空闲', group: '接警'},
+        {key: 'k', text: '坐席十', type: '通话', group: '接警'},
+        {key: 'l', text: '坐席十一', type: '示闲', group: '接警'},
+        {key: 'o', text: '坐席十二', type: '挂机', group: '接警'},
+        {key: 'a', text: '坐席一', type: '上线', group: '处警'},
+        {key: 'b', text: '坐席二', type: '离线', group: '处警'},
+        {key: 'c', text: '坐席三', type: '空闲', group: '处警'},
+        {key: 'd', text: '坐席四', type: '通话', group: '处警'},
+        {key: 'e', text: '坐席五', type: '示闲', group: '处警'},
+        {key: 'f', text: '坐席六', type: '挂机', group: '处警'},
+        {key: 'g', text: '坐席七', type: '上线', group: '处警'},
+        {key: 'h', text: '坐席八', type: '离线', group: '处警'},
+        {key: 'j', text: '坐席九', type: '空闲', group: '处警'},
+        {key: 'k', text: '坐席十', type: '通话', group: '处警'},
+        {key: 'l', text: '坐席十一', type: '示闲', group: '处警'},
+        {key: 'o', text: '坐席十二', type: '挂机', group: '处警'},
     ];
     var linkDataArray = [
         { from: "1", to: "2" }, // from a Node to the Group
